@@ -1,0 +1,13 @@
+<?php
+    $viabillId = $this->helper('Clkweb\Viabill\Helper\Data')->getViabillId();
+?>
+<script>
+    (function(){
+        var o=document.createElement('script');
+        o.type='text/javascript';
+        o.async=true;
+        o.src='https://pricetag.viabill.com/script/<?php echo $viabillId; ?>';
+        var s=document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(o,s);
+    })();
+</script>
