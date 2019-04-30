@@ -24,7 +24,7 @@ class FinalPricePlugin
 
             if ($type == "configurable")
             {
-                $result .= '<div class="viabill-pricetag" data-view="product" data-dynamic-price=".price" data-dynamic-price-triggers="#webshop_content .filters input"></div>';
+                $result .= '<div class="viabill-pricetag" data-view="product" data-dynamic-price=".price" data-dynamic-price-triggers=".product-add-form"></div>';
             }
             else
             {
