@@ -12,17 +12,26 @@ class FinalPricePlugin
 
     public function afterToHtml(\Magento\Catalog\Pricing\Render\FinalPriceBox $subject, $result)
     {
+        $product_id = $subject->getPriceId();
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $product = $objectManager->get('Magento\Catalog\Model\Product')->load($product_id);
+        $product_type = $product->getTypeId();
+
         if ($this->_request->getFullActionName() == "catalog_category_view")
         {
-            $result .= '<div class="viabill-pricetag" data-view="list" data-price="'.$subject->getPrice()->getAmount().'"></div>';
+            if ($product_type == "configurable")
+            {
+                $result .= '<div class="viabill-pricetag" data-view="list" data-dynamic-price="#product-price-'.$product_id.' .price" data-dynamic-price-triggers=".product-item-details"></div>';
+            }
+            else
+            {
+                $result .= '<div class="viabill-pricetag" data-view="list" data-price="'.$subject->getPrice()->getAmount().'"></div>';
+
+            }
         }
         else if ($this->_request->getFullActionName() == "catalog_product_view" && $subject->getPriceTypeCode() == "final_price")
         {
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');
-            $type = $product->getTypeId();
-
-            if ($type == "configurable")
+            if ($product_type == "configurable")
             {
                 $result .= '<div class="viabill-pricetag" data-view="product" data-dynamic-price=".price" data-dynamic-price-triggers=".product-add-form"></div>';
             }
