@@ -10,6 +10,16 @@ class FinalPricePlugin
         $this->_request = $request;
     }
 
+    public function getHtmlSelectors()
+    {
+        return array(
+            "list_price" => "#product-price-",
+            "list_trigger" => ".product-item-details",
+            "details_price" => ".price",
+            "details_trigger" => ".product-add-form"
+        );
+    }
+
     public function afterToHtml(\Magento\Catalog\Pricing\Render\FinalPriceBox $subject, $result)
     {
         $product_id = $subject->getPriceId();
@@ -21,7 +31,7 @@ class FinalPricePlugin
         {
             if ($product_type == "configurable")
             {
-                $result .= '<div class="viabill-pricetag" data-view="list" data-dynamic-price="#product-price-'.$product_id.' .price" data-dynamic-price-triggers=".product-item-details"></div>';
+                $result .= '<div class="viabill-pricetag" data-view="list" data-dynamic-price="'.$this->getHtmlSelectors()['list_price'].$product_id.' .price" data-dynamic-price-triggers="'.$this->getHtmlSelectors()['list_trigger'].'"></div>';
             }
             else
             {
@@ -33,7 +43,7 @@ class FinalPricePlugin
         {
             if ($product_type == "configurable")
             {
-                $result .= '<div class="viabill-pricetag" data-view="product" data-dynamic-price=".price" data-dynamic-price-triggers=".product-add-form"></div>';
+                $result .= '<div class="viabill-pricetag" data-view="product" data-dynamic-price="'.$this->getHtmlSelectors()['details_price'].'" data-dynamic-price-triggers="'.$this->getHtmlSelectors()['details_trigger'].'"></div>';
             }
             else
             {
