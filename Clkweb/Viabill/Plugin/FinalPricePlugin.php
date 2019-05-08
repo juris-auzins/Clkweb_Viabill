@@ -1,13 +1,19 @@
 <?php
 namespace Clkweb\Viabill\Plugin;
 
+use \Magento\Framework\App\Request\Http;
+use \Magento\Catalog\Model\ProductRepository;
+use \Magento\Catalog\Pricing\Render\FinalPriceBox;
+
 class FinalPricePlugin
 {
     protected $_request;
+    protected $_product_repository;
 
-    public function __construct(\Magento\Framework\App\Request\Http $request)
+    public function __construct(Http $request, ProductRepository $productRepository)
     {
         $this->_request = $request;
+        $this->_product_repository = $productRepository;
     }
 
     public function getHtmlSelectors()
@@ -20,11 +26,10 @@ class FinalPricePlugin
         );
     }
 
-    public function afterToHtml(\Magento\Catalog\Pricing\Render\FinalPriceBox $subject, $result)
+        public function afterToHtml(FinalPriceBox $subject, $result)
     {
         $product_id = $subject->getPriceId();
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $product = $objectManager->get('Magento\Catalog\Model\Product')->load($product_id);
+        $product = $this->_product_repository->getById($product_id);
         $product_type = $product->getTypeId();
 
         if ($this->_request->getFullActionName() == "catalog_category_view")
